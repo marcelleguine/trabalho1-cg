@@ -12,6 +12,7 @@
 		9FDEC235179AE4A00063A404 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FDEC234179AE4A00063A404 /* GLUT.framework */; };
 		9FDEC237179AE4A70063A404 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FDEC236179AE4A70063A404 /* OpenGL.framework */; };
 		9FDEC23C179AF3AF0063A404 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FDEC23B179AF3AF0063A404 /* Cocoa.framework */; };
+		9FDEC27F179B21130063A404 /* Curvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9FDEC27E179B21130063A404 /* Curvas.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,8 @@
 		9FDEC234179AE4A00063A404 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		9FDEC236179AE4A70063A404 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		9FDEC23B179AF3AF0063A404 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		9FDEC27D179B21130063A404 /* Curvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Curvas.h; sourceTree = "<group>"; };
+		9FDEC27E179B21130063A404 /* Curvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Curvas.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 			children = (
 				9FDEC22B179AE48C0063A404 /* main.cpp */,
 				9FDEC22D179AE48C0063A404 /* trabalho1.1 */,
+				9FDEC27D179B21130063A404 /* Curvas.h */,
+				9FDEC27E179B21130063A404 /* Curvas.cpp */,
 			);
 			path = trabalho1;
 			sourceTree = "<group>";
@@ -130,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FDEC22C179AE48C0063A404 /* main.cpp in Sources */,
+				9FDEC27F179B21130063A404 /* Curvas.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
