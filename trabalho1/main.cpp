@@ -79,35 +79,35 @@ void display(void){
     
     /*Salvar*/
     else if(valueMenu == 2){
-//        glPushMatrix();
-//        glColor3d(1.0, 0.0, 0.0);
-//        glutWireSphere(0.5, 50, 50);
-//        glPopMatrix();
+        glPushMatrix();
+        glColor3d(1.0, 0.0, 0.0);
+        glutWireSphere(0.5, 50, 50);
+        glPopMatrix();
     }
     
     /*Criar curva*/
     else if(valueMenu == 3){
-//        glPushMatrix();
-//        glColor3d(0.0, 1.0, 0.0);
-//        glRotated(65, -1.0, 0.0, 0.0);
-//        glutWireCone(0.5, 1.0, 50, 50);
-//        glPopMatrix();
+        glPushMatrix();
+        glColor3d(0.0, 1.0, 0.0);
+        glRotated(65, -1.0, 0.0, 0.0);
+        glutWireCone(0.5, 1.0, 50, 50);
+        glPopMatrix();
     }
     
     /*Excluir curva*/
     else if(valueMenu == 4){
-//        glPushMatrix();
-//        glColor3d(0.0, 0.0, 1.0);
-//        glutWireTorus(0.3,0.6,100,100);
-//        glPopMatrix();
+        glPushMatrix();
+        glColor3d(0.0, 0.0, 1.0);
+        glutWireTorus(0.3,0.6,100,100);
+        glPopMatrix();
     }
     
     /*Escolher tipo: B-Spline*/
     else if(valueMenu == 5){
-//        glPushMatrix();
-//        glColor3d(1.0, 0.0, 1.0);
-//        glutSolidTeapot(0.5);
-//        glPopMatrix();
+        glPushMatrix();
+        glColor3d(1.0, 0.0, 1.0);
+        glutSolidTeapot(0.5);
+        glPopMatrix();
         
         tipoCurva = 1;
     }

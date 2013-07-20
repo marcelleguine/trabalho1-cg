@@ -228,6 +228,7 @@
 				9FDEC233179AE48C0063A404 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
