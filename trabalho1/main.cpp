@@ -10,10 +10,12 @@
 #include <OpenGL/OpenGL.h>
 #include <cstdlib>
 #include <string>
+#include <vector>
+
+using namespace std;
 
 static int window;
 
-static int valueMenu = 0;
 static int menu_id;
 static int arquivoSubmenu_id;
 static int curvaSubmenu_id;
@@ -25,14 +27,61 @@ static int grauCurva = 3;
 
 
 void menu(int num){
-    if(num == 0){
-        glutDestroyWindow(window);
-        exit(0);
-    }else{
-        valueMenu = num;
-    }
-    glutPostRedisplay();
+    
+    switch(num) {
+        
+        /*Sair*/
+		case 0:
+            glutDestroyWindow(window);
+			exit(EXIT_SUCCESS);
+			break;
+        
+        /*Escolher tipo: 1- B-Spline / 2- Bezier*/
+		case 1:
+        case 2:
+            tipoCurva = num;
+            break;
+        
+        /*Alterar grau da curva 3-10*/
+		case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+            grauCurva = num;
+            break;
+        
+        /*Criar curva*/
+        case 11:
+            break;
+            
+        /*Excluir curva*/
+		case 12:
+            break;
+        
+        /*Transladar curva*/
+		case 13:
+            break;
+        
+        /*Rotacioar curva*/
+		case 14:
+            break;
+        
+        /*Abrir arquivo*/
+		case 15:
+            break;
+            
+        /*Salvar arquivo*/
+		case 16:
+            break;
+	}
+    
+	glutPostRedisplay();
 }
+
 
 void createMenu(void){
     
@@ -42,22 +91,24 @@ void createMenu(void){
     glutAddMenuEntry("Sair do programa", 0);
     
     tipoCurvaSubmenu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("B-spline ", 5);
-    glutAddMenuEntry("Bezier", 6);
+    glutAddMenuEntry("B-spline ", 1);
+    glutAddMenuEntry("Bezier", 2);
     
     grauCurvaSubmenu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("3", 7);
-    glutAddMenuEntry("4", 8);
-    glutAddMenuEntry("5", 9);
-    glutAddMenuEntry("6", 10);
-    glutAddMenuEntry("7", 11);
-    glutAddMenuEntry("8", 12);
-    glutAddMenuEntry("9", 13);
-    glutAddMenuEntry("10", 14);
+    glutAddMenuEntry("3", 3);
+    glutAddMenuEntry("4", 4);
+    glutAddMenuEntry("5", 5);
+    glutAddMenuEntry("6", 6);
+    glutAddMenuEntry("7", 7);
+    glutAddMenuEntry("8", 8);
+    glutAddMenuEntry("9", 9);
+    glutAddMenuEntry("10", 10);
     
     curvaSubmenu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Criar", 3);
-    glutAddMenuEntry("Exlcuir", 4);
+    glutAddMenuEntry("Criar", 11);
+    glutAddMenuEntry("Excluir", 12);
+    glutAddMenuEntry("Transladar", 13);
+    glutAddMenuEntry("Rotacionar", 14);
     glutAddSubMenu("Escolher tipo", tipoCurvaSubmenu_id);
     glutAddSubMenu("Alterar grau", grauCurvaSubmenu_id);
     
@@ -68,91 +119,47 @@ void createMenu(void){
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+
 void display(void){
     
     glClear(GL_COLOR_BUFFER_BIT);
-
-    /*Abrir*/
-    if(valueMenu == 1){
-
-    }
     
-    /*Salvar*/
-    else if(valueMenu == 2){
-        glPushMatrix();
-        glColor3d(1.0, 0.0, 0.0);
-        glutWireSphere(0.5, 50, 50);
-        glPopMatrix();
-    }
+//	glColor3f(0.0, 0.0, 1.0);
     
-    /*Criar curva*/
-    else if(valueMenu == 3){
-        glPushMatrix();
-        glColor3d(0.0, 1.0, 0.0);
-        glRotated(65, -1.0, 0.0, 0.0);
-        glutWireCone(0.5, 1.0, 50, 50);
-        glPopMatrix();
-    }
+//	glBegin(GL_POINTS);
+//    
+//    
+//	glEnd();
     
-    /*Excluir curva*/
-    else if(valueMenu == 4){
-        glPushMatrix();
-        glColor3d(0.0, 0.0, 1.0);
-        glutWireTorus(0.3,0.6,100,100);
-        glPopMatrix();
-    }
+	glutSwapBuffers();
     
-    /*Escolher tipo: B-Spline*/
-    else if(valueMenu == 5){
-        glPushMatrix();
-        glColor3d(1.0, 0.0, 1.0);
-        glutSolidTeapot(0.5);
-        glPopMatrix();
-        
-        tipoCurva = 1;
-    }
-    
-    /*Escolher tipo: Bezier*/
-    else if(valueMenu == 6){
-        tipoCurva = 2;
-    }
-    
-    /*Alterar grau da curva: 
-     valor: 3*/
-    else if(valueMenu == 7){
-        grauCurva = 3;
-    }
-    /*valor: 4*/
-    else if(valueMenu == 8){
-        grauCurva = 4;
-    }
-    /*valor: 5*/
-    else if(valueMenu == 9){
-        grauCurva = 5;
-    }
-    /*valor: 6*/
-    else if(valueMenu == 10){
-        grauCurva = 6;
-    }
-    /*valor: 7*/
-    else if(valueMenu == 11){
-        grauCurva = 7;
-    }
-    /*valor: 8*/
-    else if(valueMenu == 12){
-        grauCurva = 8;
-    }
-    /*valor: 9*/
-    else if(valueMenu == 13){
-        grauCurva = 9;
-    }
-    /*valor: 10*/
-    else if(valueMenu == 14){
-        grauCurva = 10;
-    }   
-    
-    glFlush();
 }
+
+
+void mouse(int button, int state, int x, int y) {
+    
+    glutPostRedisplay();
+}
+
+
+void idle() {
+    
+    glutSetWindow(window);
+    glutPostRedisplay();
+}
+
+
+void init(){
+    
+    glClearColor(0.0,0.0,0.0,0.0);
+	glMatrixMode(GL_PROJECTION);
+	gluOrtho2D(0.0, 1024.0, 768.0, 0.0);
+	glEnable( GL_POINT_SMOOTH );
+    glEnable( GL_BLEND );
+	glPointSize(5.0f);
+    
+}
+
 
 int main(int argc, char **argv){
     
@@ -160,12 +167,16 @@ int main(int argc, char **argv){
     glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
     glutInitWindowSize(800,600);
     glutInitWindowPosition(250, 200);
+    
     window = glutCreateWindow("Computação Gráfica - Construção de Curvas");
-    
+
     createMenu();
+    init();
     
-    glClearColor(0.0,0.0,0.0,0.0);
     glutDisplayFunc(display);
+    glutMouseFunc(mouse);
+	glutIdleFunc(idle);
+    
     glutMainLoop();
     
     return EXIT_SUCCESS;
