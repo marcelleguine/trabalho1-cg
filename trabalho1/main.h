@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Marcelle Guine. All rights reserved.
 //
 
-#include <GLUT/GLUT.h>
 #include <OpenGL/OpenGL.h>
 
 #include <cstdlib>
