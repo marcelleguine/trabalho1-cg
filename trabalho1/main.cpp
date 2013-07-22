@@ -9,7 +9,6 @@
 
 #include "main.h"
 
-
 void menu(int num){
     
     switch(num) {
@@ -41,17 +40,22 @@ void menu(int num){
         /*Criar curva*/
         case 11:
             if (tipoCurva == 1)
-                curvaAtual = new BSpline();
+//                curvaAtual = new BSpline();
+                curvaAtual = new Bezier();
             else
-                curvaAtual = new BezierCurve();
+                curvaAtual = new Bezier();
             
-            curvaAtual -> setGrauCurva(grauCurva);
+            curvaAtual -> setGrauDaCurva(grauCurva);
             estadoAtual = DESENHANDO_CURVA;
             
             break;
             
         /*Excluir curva*/
 		case 12:
+            if (estadoAtual == CURVA_SELECIONADA) {
+				curvas.erase(curvas.begin() + indexCurvaAtual);
+				curvaAtual = new Curva();
+			}
             break;
         
         /*Transladar curva*/
@@ -128,7 +132,15 @@ void criarMenu(void){
 
 
 void display(void){
-        
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(0.0, 0.0, 1.0);
+    
+    glBegin(GL_POINTS);
+    
+    
+    glEnd();
+    
+    glutSwapBuffers();
 }
 
 

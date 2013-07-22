@@ -12,7 +12,8 @@
 #include <string>
 #include <vector>
 
-#include "curva.h"
+//#include "bspline.h"
+#include "bezier.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ static int indexCurvaAtual;
 
 ESTADO estadoAtual;
 Curva *curvaAtual;
-vector<Curvas*> curves;
+vector<Curva*> curvas;
 
 
 /*Funções*/

@@ -18,10 +18,12 @@ using namespace std;
 class Curva{
     
 public:
-	Curva(void);
-	Curva& operator=(const Curva&);
+	
+    Curva(void);
 	~Curva(void);
 
+    Curva& operator=(const Curva&);
+    
 	virtual void refresh();
 	virtual bool possuiTodosOsPontosDeControle();
 	virtual int getTipoCurva();
