@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9FD21E2A179D9ABD0014A48C /* curva.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9FD21E29179D9ABD0014A48C /* curva.cpp */; };
 		9FDEC22C179AE48C0063A404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9FDEC22B179AE48C0063A404 /* main.cpp */; };
 		9FDEC22E179AE48C0063A404 /* trabalho1.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FDEC22D179AE48C0063A404 /* trabalho1.1 */; };
 		9FDEC235179AE4A00063A404 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FDEC234179AE4A00063A404 /* GLUT.framework */; };
@@ -28,6 +29,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9F9A0741179D8BA5002F5D80 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		9FD21E28179D9ABD0014A48C /* curva.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curva.h; sourceTree = "<group>"; };
+		9FD21E29179D9ABD0014A48C /* curva.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = curva.cpp; sourceTree = "<group>"; };
 		9FDEC228179AE48C0063A404 /* trabalho1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trabalho1; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FDEC22B179AE48C0063A404 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		9FDEC22D179AE48C0063A404 /* trabalho1.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = trabalho1.1; sourceTree = "<group>"; };
@@ -74,6 +78,9 @@
 			children = (
 				9FDEC22B179AE48C0063A404 /* main.cpp */,
 				9FDEC22D179AE48C0063A404 /* trabalho1.1 */,
+				9F9A0741179D8BA5002F5D80 /* main.h */,
+				9FD21E28179D9ABD0014A48C /* curva.h */,
+				9FD21E29179D9ABD0014A48C /* curva.cpp */,
 			);
 			path = trabalho1;
 			sourceTree = "<group>";
@@ -130,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FDEC22C179AE48C0063A404 /* main.cpp in Sources */,
+				9FD21E2A179D9ABD0014A48C /* curva.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

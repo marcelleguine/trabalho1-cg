@@ -6,24 +6,8 @@
 //  Copyright (c) 2013 Marcelle Guine. All rights reserved.
 //
 
-#include <GLUT/GLUT.h>
-#include <OpenGL/OpenGL.h>
-#include <cstdlib>
-#include <string>
-#include <vector>
 
-using namespace std;
-
-static int window;
-
-static int menu_id;
-static int arquivoSubmenu_id;
-static int curvaSubmenu_id;
-static int tipoCurvaSubmenu_id;
-static int grauCurvaSubmenu_id;
-
-static int tipoCurva = 1;
-static int grauCurva = 3;
+#include "main.h"
 
 
 void menu(int num){
@@ -36,7 +20,7 @@ void menu(int num){
 			exit(EXIT_SUCCESS);
 			break;
         
-        /*Escolher tipo: 1- B-Spline / 2- Bezier*/
+        /*Escolher tipo: 1- B-Spline / 2- Bézier*/
 		case 1:
         case 2:
             tipoCurva = num;
@@ -56,6 +40,14 @@ void menu(int num){
         
         /*Criar curva*/
         case 11:
+            if (tipoCurva == 1)
+                curvaAtual = new BSpline();
+            else
+                curvaAtual = new BezierCurve();
+            
+            curvaAtual -> setGrauCurva(grauCurva);
+            estadoAtual = DESENHANDO_CURVA;
+            
             break;
             
         /*Excluir curva*/
@@ -64,30 +56,44 @@ void menu(int num){
         
         /*Transladar curva*/
 		case 13:
+            if (estadoAtual == CURVA_SELECIONADA) {
+				estadoAtual = TRANSLADANDO_CURVA;
+			}
             break;
         
         /*Rotacioar curva*/
 		case 14:
+            if (estadoAtual == CURVA_SELECIONADA) {
+				estadoAtual = ROTACIONANDO_CURVA;
+			}
+            break;
+            
+        /*Escalar curva*/
+        case 15:
+            if (estadoAtual == CURVA_SELECIONADA) {
+				estadoAtual = ESCALANDO_CURVA;
+			}
             break;
         
         /*Abrir arquivo*/
-		case 15:
+		case 16:
             break;
             
         /*Salvar arquivo*/
-		case 16:
+		case 17:{
             break;
+        }
 	}
     
 	glutPostRedisplay();
 }
 
 
-void createMenu(void){
+void criarMenu(void){
     
     arquivoSubmenu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Abrir", 1);
-    glutAddMenuEntry("Salvar", 2);
+    glutAddMenuEntry("Abrir", 16);
+    glutAddMenuEntry("Salvar", 17);
     glutAddMenuEntry("Sair do programa", 0);
     
     tipoCurvaSubmenu_id = glutCreateMenu(menu);
@@ -109,6 +115,7 @@ void createMenu(void){
     glutAddMenuEntry("Excluir", 12);
     glutAddMenuEntry("Transladar", 13);
     glutAddMenuEntry("Rotacionar", 14);
+    glutAddMenuEntry("Escalar", 15);
     glutAddSubMenu("Escolher tipo", tipoCurvaSubmenu_id);
     glutAddSubMenu("Alterar grau", grauCurvaSubmenu_id);
     
@@ -121,22 +128,11 @@ void createMenu(void){
 
 
 void display(void){
-    
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-//	glColor3f(0.0, 0.0, 1.0);
-    
-//	glBegin(GL_POINTS);
-//    
-//    
-//	glEnd();
-    
-	glutSwapBuffers();
-    
+        
 }
 
 
-void mouse(int button, int state, int x, int y) {
+void mouse(int botao, int estado, int x, int y) {
     
     glutPostRedisplay();
 }
@@ -170,7 +166,7 @@ int main(int argc, char **argv){
     
     window = glutCreateWindow("Computação Gráfica - Construção de Curvas");
 
-    createMenu();
+    criarMenu();
     init();
     
     glutDisplayFunc(display);
