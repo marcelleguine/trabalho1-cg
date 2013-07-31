@@ -2,8 +2,8 @@
 //  main.c
 //  compGraf-bezierBspline
 //
-//  Created by Marcelle Guine on 31/07/13.
-//  Copyright (c) 2013 Marcelle Guine. All rights reserved.
+//  Created by Carolina Zamith e Marcelle Guine on 31/07/13.
+//  Copyright (c) 2013 Carolina Zamith e Marcelle Guine. All rights reserved.
 //
 
 #include <stdio.h>
@@ -19,71 +19,76 @@
 #include "List.h"
 
 typedef enum{
-    DESENHANDO,
-    TRANSLADANDO,
-    ROTACIONANDO,
-    ESCALANDO
-} estadoPrograma;
+    DRAWING,
+    TRANSLATING,
+    ROTATING,
+    SCALING
+} programState;
 
-estadoPrograma estado = DESENHANDO;
+programState state = DRAWING;
 
-int order = 3;
+int order = 3; /*grau da curva*/
 int count = 0;
 struct list * selected = 0;
 int bezier = 0;
 float * knot = 0;
 struct list * l = 0;
 
-// GLUT callbacks.
+// Chamadas da GLUT
 void mouse(int button, int state, int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void motion(int x, int y);
 void display(void);
 void reshape(int w, int h);
 
-// Bezier computation.
+// Bezier
 void computeNOrderBezierlf(int n, struct list * l, float t, float * resx, float * resy);
 int coeff(int n, int k);
 
-// B-spline computation.
+// B-spline
 void computeNOrderBsplinelf(int d, struct list * l, float u, float * t, float * resx, float * resy);
 float BsplineBasis(int j, int d, float u, float * t);
-float * computeUniformKnot(int d, int n);
+float * computeKnot(int d, int n);
 
-// Helper functions.
+// Print
 struct list * listGetNearestNodegl(struct list * l, int x, int y);
 void printHelpglut();
 
 
-// Main asks for initial input from the user and instructs the user how to interact at run-time.
 int main (int argc, const char * argv[])
 {
 	int gwind = 0;
     
-	printf("Dicas, Utilize:\n - 3 - 9 para mudar o grau da curva.\n - 0 para trocar entre as curvas de Bezier and B-Spline.\n - C para limpar todos os pontos de controle.\n - ESC para sair do programa.\n - R para rotacionar a curva.\n - T para transladar a curva.\n - S para escalar a curva.\n - o botão esquerdo do mouse para adicionar um ponto de controle.\n - o botão direito do mouse para remover um ponto de controle.\n");
+	printf("Dicas, Utilize:\n - 3 - 9 para mudar o grau da curva.\n - 0 para trocar entre as curvas de Bezier and B-Spline.\n - C para limpar todos os pontos de controle.\n - ESC para sair do programa.\n - R para rotacionar a curva.\n - T para transladar a curva.\n - S para escalar a curva.\n - O botão esquerdo do mouse para adicionar um ponto de controle.\n - O botão direito do mouse para remover um ponto de controle.\n");
     
-    knot = computeUniformKnot(order + 1, count - 1);
+    knot = computeKnot(order + 1, count - 1);
     
     glutInit(&argc, (char **)argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutInitWindowSize(800, 600);
+    
     gwind = glutCreateWindow("Trabalho de Computação Gráfica - Construção de Curvas");
+    
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_BLEND);
+    
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     glClearColor(1.0, 1.0, 1.0, 1.0);
-	glPointSize(8.0f);
-	glutReshapeFunc(reshape);
+	
+    glPointSize(8.0f);
+	
+    glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutMouseFunc(mouse);
 	glutKeyboardFunc(keyboard);
     glutMotionFunc(motion);
     
     glutMainLoop();
+    
     return 0;
 }
 
-// Returns the first node in a list that is within range of GL_POINT_SIZE.
 struct list * listGetNearestNodegl(struct list * l, int x, int y)
 {
     float pointSize;
@@ -101,7 +106,7 @@ struct list * listGetNearestNodegl(struct list * l, int x, int y)
     return 0;
 }
 
-// Prints help on screen.
+// Print window
 void printHelpglut()
 {
     char s[100];
@@ -190,7 +195,7 @@ void printHelpglut()
     }
 }
 
-// GLUT callback for mouse dragging.
+// GLUT : Mover pontos de controle pela tela
 void motion(int x, int y)
 {
     if (selected)
@@ -201,17 +206,17 @@ void motion(int x, int y)
     }
 }
 
-static void rotacionar(tempontosdecontrole){
+static void rotate(tempontosdecontrole){
     //    if(tempontosdecontrole.x!=0){
     //        for (int i=0; tempontosdecontrole.size; i++) {
     //
     //        }
     //    }
     
-    estado = DESENHANDO;
+    state = DRAWING;
 }
 
-static void transladar(int x, int y){
+static void translate(int x, int y){
     
     //    float topX = -10, topY = -10;
     //
@@ -236,18 +241,16 @@ static void transladar(int x, int y){
     //    display();
     //    desenharCurva();
     
-    estado = DESENHANDO;
+    state = DRAWING;
 }
 
-static void escalar(){
-    estado = DESENHANDO;
+static void scale(){
+    state = DRAWING;
 }
 
-// GLUT callback for mouse activity.
 void mouse(int button, int state, int x, int y)
 {
-    /*Desenha na tela*/
-    if (estado == DESENHANDO)
+    if (state == DRAWING)
     {
         if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
         {
@@ -260,11 +263,12 @@ void mouse(int button, int state, int x, int y)
             
                 count++;
                 free(knot);
-                knot = computeUniformKnot(order + 1, count - 1);
+                knot = computeKnot(order + 1, count - 1);
             }
         
             glutPostRedisplay();
         }
+        
         else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
         {
             if ((selected = listGetNearestNodegl(l, x, y)))
@@ -277,21 +281,21 @@ void mouse(int button, int state, int x, int y)
                 selected = 0;
                 count --;
                 free(knot);
-                knot = computeUniformKnot(order + 1, count - 1);
+                knot = computeKnot(order + 1, count - 1);
             }
         
             glutPostRedisplay();
         }
     }
     
-    /*Aplica transformações*/
+    // Aplica transformações
     else{
-        if (estado == TRANSLADANDO)
-            transladar(x, y);
-        else if (estado == ROTACIONANDO)
-            rotacionar(1);
-        else if (estado == ESCALANDO)
-            escalar();
+        if (state == TRANSLATING)
+            translate(x, y);
+        else if (state == ROTATING)
+            rotate(1);
+        else if (state == SCALING)
+            scale();
     }
 }
 
@@ -299,45 +303,44 @@ void keyboard(unsigned char key, int x, int y)
 {
 	if (key >= '3' && key <= '9')
         order = (int)key - 48;
+    
     else if (key == '0')
         bezier = !bezier;
-	else if (key == 'c' || key == 'C')
+	
+    else if (key == 'c' || key == 'C')
 	{
 		selected = 0;
 		listFree(l);
 		l = 0;
         count = 0;
 	}
+    
     else if (key == 'r' || key == 'R')
 	{
-        estado = ROTACIONANDO;
+        state = ROTATING;
 	}
+    
     else if (key == 't' || key == 'T')
 	{
-        estado = TRANSLADANDO;
+        state = TRANSLATING;
 	}
+    
     else if (key == 's' || key == 'S')
 	{
-        estado = ESCALANDO;
+        state = SCALING;
 	}
-	else if ((int)key == 27)
+	
+    else if ((int)key == 27)
 	{
 		glutDestroyWindow(glutGetWindow());
 		exit(0);
 	}
     
-    if (!bezier)
-    {
-        free(knot);
-        knot = computeUniformKnot(order + 1, count - 1);
-    }
 	glutPostRedisplay();
+
 	return;
 }
 
-// GLUT callback for rendering.
-// Draws all the control points in l, their connecting lines and the curve as specified by the user.
-// Ends by printing a description of the current curve to the screen.
 void display()
 {
 	struct list * tmp = l;
@@ -345,60 +348,59 @@ void display()
 	float t;
     
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3ub(127, 127, 127);
+    
+    // Desenha linhas de controle
+    glColor3ub(119, 136, 153);
 	glBegin(GL_LINE_STRIP);
-    
-	tmp = l;
-	while (tmp)
-    {
-        glVertex2f(tmp->x, tmp->y);
-        tmp = tmp->next;
-    }
-    
-	glEnd();
-    
-    glColor3ub(255, 0, 0);
-    
-    glBegin(GL_POINTS);
-	tmp = l;
-    while (tmp)
-    {
-        glVertex2f(tmp->x, tmp->y);
-        tmp = tmp->next;
-    }
+        tmp = l;
+        while (tmp)
+        {
+            glVertex2f(tmp->x, tmp->y);
+            tmp = tmp->next;
+        }
     glEnd();
     
-    glColor3ub(0, 0, 0);
-    glBegin(GL_LINE_STRIP);
-	tmp = l;
-    if (bezier)
-    {
-        while (tmp && listCount(tmp) > order)
+    // Desenha pontos de controle
+    glColor3ub(255, 105, 180);
+    glBegin(GL_POINTS);
+        tmp = l;
+        while (tmp)
         {
-            for (t = 0.0f; t <= 1.0f; t+=0.01f)
+            glVertex2f(tmp->x, tmp->y);
+            tmp = tmp->next;
+        }
+    glEnd();
+    
+    // Desenha curva
+    glColor3ub(106, 90, 205);
+    glBegin(GL_LINE_STRIP);
+        tmp = l;
+        if (bezier)
+        {
+            while (tmp && listCount(tmp) > order)
             {
-                computeNOrderBezierlf(order, tmp, t, &x, &y);
+                for (t = 0.0f; t <= 1.0f; t+=0.01f)
+                {
+                    computeNOrderBezierlf(order, tmp, t, &x, &y);
+                    glVertex2f(x, y);
+                }
+                tmp = listGet(tmp, order);
+            }
+        }
+        else
+        {
+            for (t = knot[order]; t <= knot[count]; t+=0.01f)
+            {
+                computeNOrderBsplinelf(order + 1, l, t, knot, &x, &y);
                 glVertex2f(x, y);
             }
-            tmp = listGet(tmp, order);
         }
-    }
-    else
-    {
-        for (t = knot[order]; t <= knot[count]; t+=0.01f)
-        {
-            computeNOrderBsplinelf(order + 1, l, t, knot, &x, &y);
-            glVertex2f(x, y);
-        }
-    }
     glEnd();
     
     printHelpglut();
-    
     glutSwapBuffers();
 }
 
-// GLUT callback for window resizing.
 void reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
@@ -408,8 +410,8 @@ void reshape(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
-// Computes a point on a N-th degree bezier curve at interval t.
-// Returns the point through resx and resy.
+// Calcula o ponto do enésimo grau da curva de Bezier no intervalo t
+// Retorna o ponto através das variáveis resx e resy
 void computeNOrderBezierlf(int n, struct list * l, float t, float * resx, float * resy)
 {
     float omt = 1.0f - t;
@@ -427,7 +429,7 @@ void computeNOrderBezierlf(int n, struct list * l, float t, float * resx, float 
     }
 }
 
-// Recursively computes the binomial coefficients for Bezier curves.
+// Calcula recursivamente os coeficientes binomiais para a curva de Bezier
 int coeff(int n, int k)
 {
     if (n == 0 && k > 0)
@@ -435,11 +437,10 @@ int coeff(int n, int k)
     if (k == 0)
         return 1;
     return coeff(n-1, k-1) + coeff(n-1, k);
-    
 }
 
-// Computes all (m = d + n + 1) uniform knot vectors.
-float * computeUniformKnot(int d, int n)
+// Calcula: m = d + n + 1
+float * computeKnot(int d, int n)
 {
 	int j = 0;
     int m = (d + n + 1);
@@ -451,8 +452,8 @@ float * computeUniformKnot(int d, int n)
 	return t;
 }
 
-// Computes a point on a N-th degree (d - 1) B-spline curve at interval u.
-// Returns the point through resx and resy.
+// Calcula o ponto do enésimo grau da curva de B-spline no intervalo u
+// Retorna o ponto através das variáveis resx e resy
 void computeNOrderBsplinelf(int d, struct list * l, float u, float * t, float * resx, float * resy)
 {
 	int j = 0;
@@ -470,8 +471,8 @@ void computeNOrderBsplinelf(int d, struct list * l, float u, float * t, float * 
     }
 }
 
-// Recursively computes the B-spline basis function at interval u.
-// Handles division by zero as zero and stops recursing in a branch when multiplication by zero would occur.
+// Calcula recursivamente a função de base B-spline no intervalo u
+// Manipula a divisão por zero
 float BsplineBasis(int j, int d, float u, float * t)
 {
 	if (d == 1)

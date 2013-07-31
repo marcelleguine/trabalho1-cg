@@ -2,14 +2,13 @@
 //  List.c
 //  compGraf-bezierBspline
 //
-//  Created by Marcelle Guine on 31/07/13.
-//  Copyright (c) 2013 Marcelle Guine. All rights reserved.
+//  Created by Carolina Zamith e Marcelle Guine on 31/07/13.
+//  Copyright (c) 2013 Carolina Zamith e Marcelle Guine. All rights reserved.
 //
 
 #include <stdlib.h>
 #include "List.h"
 
-// Allocate a new block of memory to hold a node and return the address of that block.
 struct list * listNew(float x, float y)
 {
     struct list * l = (struct list *)malloc(sizeof(struct list));
@@ -20,7 +19,6 @@ struct list * listNew(float x, float y)
     return l;
 }
 
-// Free this node and all subnodes.
 void listFree(struct list * l)
 {
     while (l)
@@ -31,7 +29,6 @@ void listFree(struct list * l)
     }
 }
 
-// Add list at end of list l with values x and y.
 void listAdd(struct list * l, float x, float y)
 {
 	struct list * n = 0;
@@ -43,7 +40,6 @@ void listAdd(struct list * l, float x, float y)
     l->next = n;
 }
 
-// Count all subnodes of this list.
 int listCount(struct list * l)
 {
     int i = 0;
@@ -55,7 +51,6 @@ int listCount(struct list * l)
     return i;
 }
 
-// Remove list from sequence and chain prev and next.
 struct list * listRemove(struct list * l)
 {
     struct list * n = l->next;
@@ -71,7 +66,6 @@ struct list * listRemove(struct list * l)
     return n;
 }
 
-// Remove list at depth d from list l.
 struct list * listRemoveAt(struct list * l, int d)
 {
     if (!d)
@@ -81,7 +75,6 @@ struct list * listRemoveAt(struct list * l, int d)
     return l;
 }
 
-// Return list at depth d from list l.
 struct list * listGet(struct list * l, int d)
 {
     while (l && d)
