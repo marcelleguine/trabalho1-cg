@@ -18,15 +18,6 @@
 
 #include "List.h"
 
-typedef enum{
-    DRAWING,
-    TRANSLATING,
-    ROTATING,
-    SCALING
-} programState;
-
-programState state = DRAWING;
-
 int order = 3; /*grau da curva*/
 int count = 0;
 struct list * selected = 0;
@@ -206,96 +197,194 @@ void motion(int x, int y)
     }
 }
 
-static void rotate(tempontosdecontrole){
-    //    if(tempontosdecontrole.x!=0){
-    //        for (int i=0; tempontosdecontrole.size; i++) {
-    //
-    //        }
-    //    }
-    
-    state = DRAWING;
+static void mult(float m[3][3], float m_pos[3][1], float m_resut[3][1])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            for (int k = 0; k < 1; k++)
+                m_resut[i][j] = m_resut[i][j] + (m[i][k] * m_pos[k][j]);
 }
 
-static void translate(int x, int y){
+static void translate()
+{
+    float posX = 0;
+    float posY = 0;
+    printf("\n Entre com o valor para translação em x: ");
+	if (!scanf("%f", &posX)) fflush(stdin);
+    printf("\n Entre com o valor para translação em y: ");
+	if (!scanf("%f", &posY)) fflush(stdin);
     
-    //    float topX = -10, topY = -10;
-    //
-    //    int num_pontos = sizeof(pontosDeControle)/sizeof(pontosDeControle[0]);
-    //
-    //    for (int i = 0; i < num_pontos; i++) {
-    //        if (pontosDeControle[i][0] && pontosDeControle[i][0] > topX) topX = pontosDeControle[i][0];
-    //        if (pontosDeControle[i][1] && pontosDeControle[i][1] > topY) topY = pontosDeControle[i][1];
-    //    }
-    //
-    //    float wx, wy;
-    //    mouse_to_coordenada(x, y, &wx, &wy);
-    //
-    //    float translationXOffset = wx - topX;
-    //    float translationYOffset = wy - topY;
-    //
-    //    for (int i = 0; i < num_pontos; i++) {
-    //        if (pontosDeControle[i][0]) pontosDeControle[i][0] += translationXOffset;
-    //        if (pontosDeControle[i][1]) pontosDeControle[i][1] += translationYOffset;
-    //    }
-    //
-    //    display();
-    //    desenharCurva();
+    float auxX, auxY;
+    struct list * lResultT = 0;
+    struct list * lAuxT = 0;
     
-    state = DRAWING;
+    lAuxT = l;
+    selected = 0;
+    count = 0;
+    
+    while(lAuxT)
+    {
+        auxX = lAuxT->x + posX;
+        auxY = lAuxT->y + posY;
+        lAuxT = lAuxT->next;
+        
+        if (lResultT)
+            listAdd(lResultT, (auxX), (auxY));
+        else
+            lResultT = listNew((auxX), (auxY));
+        
+        count++;
+        free(knot);
+        knot = computeKnot(order + 1, count - 1);
+        
+        glutPostRedisplay();
+    }
+    
+    listFree(l);
+    l = 0;
+    l = lResultT;
 }
 
-static void scale(){
-    state = DRAWING;
+static void rotate()
+{    
+    float angle = 0;
+    printf("\n Entre com o angulo de rotação desejado: ");
+	if (!scanf("%f", &angle)) fflush(stdin);
+    
+    float auxX, auxY;
+    struct list * lResult = 0;
+    struct list * lAux = 0;
+    float m_resut[3][1] = {0,0,0};
+    
+    lAux = l;
+    selected = 0;
+    count = 0;
+    
+    float m_rotate[3][3] = { { cos(angle), -sin(angle), 0},
+                             { sin(angle), cos(angle) , 0},
+                             {     0     ,     0      , 1} };
+    
+    while(lAux)
+    {
+        auxX = lAux->x;
+        auxY = lAux->y;
+        lAux = lAux->next;
+        
+        float m_pos[3][1] = {{ auxX },
+            { auxY },
+            {  1   }};
+        
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 1; j++)
+                for (int k = 0; k < 3; k++)
+                    m_resut[i][j] = m_resut[i][j] + (m_rotate[i][k] * m_pos[k][0]);
+        
+        if (lResult)
+            listAdd(lResult, (m_resut[0][0]), (m_resut[1][0]));
+        else
+            lResult = listNew((m_resut[0][0]), (m_resut[1][0]));
+        
+        count++;
+        free(knot);
+        knot = computeKnot(order + 1, count - 1);
+        
+        glutPostRedisplay();
+    }
+    
+    listFree(l);
+    l = 0;
+    l = lResult;
+}
+
+static void scale()
+{
+    float scaleX = 1;
+    float scaleY = 1;
+    printf("\n Entre com o valor para escala em x: ");
+	if (!scanf("%f", &scaleX)) fflush(stdin);
+    printf("\n Entre com o valor para escala em y: ");
+	if (!scanf("%f", &scaleY)) fflush(stdin);
+    
+    float auxX, auxY;
+    struct list * lResult = 0;
+    struct list * lAux = 0;
+    float m_resut[3][1] = {0,0,0};
+    
+    lAux = l;
+    selected = 0;
+    count = 0;
+    
+    float m_scale[3][3] = { { scaleX,  0,    0},
+                          {   0,   scaleY,   0},
+                          {   0,     0,      1}};
+    
+    while(lAux)
+    {
+        auxX = lAux->x;
+        auxY = lAux->y;
+        lAux = lAux->next;
+        
+        float m_pos[3][1] = {{ auxX },
+            { auxY },
+            {  1   }};
+        
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 1; j++)
+                for (int k = 0; k < 3; k++)
+                    m_resut[i][j] = m_resut[i][j] + (m_scale[i][k] * m_pos[k][0]);
+        
+        if (lResult)
+            listAdd(lResult, (m_resut[0][0]), (m_resut[1][0]));
+        else
+            lResult = listNew((m_resut[0][0]), (m_resut[1][0]));
+        
+        count++;
+        free(knot);
+        knot = computeKnot(order + 1, count - 1);
+        
+        glutPostRedisplay();
+    }
+    
+    listFree(l);
+    l = 0;
+    l = lResult;
 }
 
 void mouse(int button, int state, int x, int y)
 {
-    if (state == DRAWING)
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+        if (!(selected = listGetNearestNodegl(l, x, y)))
         {
-            if (!(selected = listGetNearestNodegl(l, x, y)))
-            {
-                if (l)
-                    listAdd(l, (float)x, (float)y);
-                else
-                    l = listNew((float)x, (float)y);
+            if (l)
+                listAdd(l, (float)x, (float)y);
+            else
+                l = listNew((float)x, (float)y);
             
-                count++;
-                free(knot);
-                knot = computeKnot(order + 1, count - 1);
-            }
-        
-            glutPostRedisplay();
+            count++;
+            free(knot);
+            knot = computeKnot(order + 1, count - 1);
         }
         
-        else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-        {
-            if ((selected = listGetNearestNodegl(l, x, y)))
-            {
-                if (l == selected)
-                    l = listRemove(selected);
-                else
-                    listRemoveAt(selected, 0);
-                
-                selected = 0;
-                count --;
-                free(knot);
-                knot = computeKnot(order + 1, count - 1);
-            }
-        
-            glutPostRedisplay();
-        }
+        glutPostRedisplay();
     }
     
-    // Aplica transformações
-    else{
-        if (state == TRANSLATING)
-            translate(x, y);
-        else if (state == ROTATING)
-            rotate(1);
-        else if (state == SCALING)
-            scale();
+    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        if ((selected = listGetNearestNodegl(l, x, y)))
+        {
+            if (l == selected)
+                l = listRemove(selected);
+            else
+                listRemoveAt(selected, 0);
+            
+            selected = 0;
+            count --;
+            free(knot);
+            knot = computeKnot(order + 1, count - 1);
+        }
+        
+        glutPostRedisplay();
     }
 }
 
@@ -317,17 +406,17 @@ void keyboard(unsigned char key, int x, int y)
     
     else if (key == 'r' || key == 'R')
 	{
-        state = ROTATING;
+        rotate();
 	}
     
     else if (key == 't' || key == 'T')
 	{
-        state = TRANSLATING;
+        translate();
 	}
     
     else if (key == 's' || key == 'S')
 	{
-        state = SCALING;
+        scale();
 	}
 	
     else if ((int)key == 27)
